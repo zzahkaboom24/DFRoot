@@ -22,6 +22,7 @@ public class BootReceiver extends BroadcastReceiver implements IReporter {
             Log.i(TAG, "boot: already hooked, skipping");
             return;
         }
+        final PendingResult async = goAsync();
         Log.i(TAG, "boot: " + intent.getAction());
         final Context deCtx = context.createDeviceProtectedStorageContext();
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -35,6 +36,7 @@ public class BootReceiver extends BroadcastReceiver implements IReporter {
                 Log.e(TAG, "boot: exploit exception", e);
             } finally {
                 wl.release();
+                async.finish();
             }
         }, "dfroot-boot").start();
     }
